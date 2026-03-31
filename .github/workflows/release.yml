@@ -1,0 +1,69 @@
+name: release
+
+on:
+  workflow_run:
+    workflows: ["ci"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.actor.login != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine Next Version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest="$(git tag --list 'v*' --sort=-version:refname | head -n1)"
+          if [[ -z "$latest" ]]; then
+            next="0.1.0"
+          else
+            base="${latest#v}"
+            IFS=. read -r major minor patch <<<"$base"
+            next="${major}.${minor}.$((patch + 1))"
+          fi
+          echo "version=$next" >> "$GITHUB_OUTPUT"
+
+      - name: Bump Manifest Versions
+        run: |
+          set -euo pipefail
+          python3 scripts/bump_version.py "${{ steps.version.outputs.version }}"
+          cargo check -p tachyon-rerank
+
+      - name: Commit and Tag Release
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          git add services/tachann/Cargo.toml native/qnnshim/Cargo.toml Cargo.lock
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(release): v${version} [skip ci]"
+          git tag -a "v${version}" -m "Release v${version}"
+          git push origin main --follow-tags

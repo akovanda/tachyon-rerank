@@ -50,5 +50,10 @@ TACHANN_RUN_OPTIONAL_ACCEL_TESTS=1 cargo test -p tachyon-rerank optional_
 2. If you change ranking behavior or setup, update the README and the relevant doc.
 3. If you change performance behavior, update the benchmark report or explain why not.
 
+**Releases**
+1. The repo starts at `v0.1.0`.
+2. After CI succeeds on a push to `main`, the release workflow automatically bumps the patch version, commits the manifest update, and creates the next `vX.Y.Z` tag.
+3. Keep manual version edits out of normal feature commits unless the release flow itself is changing.
+
 **License**
 By contributing, you agree that your contributions are licensed under the MIT license.
