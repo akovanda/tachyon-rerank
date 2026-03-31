@@ -62,7 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/bump_version.py "${{ steps.version.outputs.version }}"
-          cargo check -p tachyon-rerank --locked
+          cargo check -p tachyon-rerank
 
       - name: Commit and Tag Release
         if: steps.version.outputs.skip != 'true'
