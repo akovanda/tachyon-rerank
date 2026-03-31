@@ -1,0 +1,17 @@
+/.env
+/.env.local
+/.env.*
+/target/
+**/target/
+/qairt/
+/runtime-libs/
+/vendor/
+/benchmarks/.cache/
+/.cache/
+/.trash/
+*.log
+*.tmp
+*.swp
+.DS_Store
+__pycache__/
+*.pyc

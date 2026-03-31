@@ -1,0 +1,25 @@
+services:
+  tachann:
+    build:
+      context: .
+      dockerfile: Dockerfile.qnn.local
+      args:
+        QNN_VERSION: "2.37.0.250724"
+    image: tachann:qnn-local
+    command: ["/app/bin/tachyon-ann"]
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    devices:
+      - "/dev/adsprpc-smd:/dev/adsprpc-smd"
+      - "/dev/adsprpc-smd-secure:/dev/adsprpc-smd-secure"
+      - "/dev/ion:/dev/ion"
+    environment:
+      TACHANN_BACKEND: qnn
+      TACHANN_QNN_BACKEND: htp
+      TACHANN_QNN_FP16: "1"
+      TACHANN_QNN_LIB: /app/lib/libtachyon_qnnshim.so
+      TACHANN_QNN_WARMUP: "1"
+      SHIM_DIRECT_QNN: "1"
+      TACHANN_ORT_EP: cpu
+      RUST_LOG: debug

@@ -1,0 +1,22 @@
+[package]
+name = "tachyon_qnnshim"
+version = "0.1.0"
+edition = "2021"
+description = "Thin C-ABI shim between tachann and QNN SDK (with CPU fallback)."
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# keep detect-qnn on by default and enable direct-qnn graph path
+default = ["detect-qnn", "direct-qnn"]
+detect-qnn = ["libloading"]
+direct-qnn = []   # keep but unused for now
+
+[dependencies]
+once_cell = "1"
+libloading = { version = "0.8", optional = true }
+
+[build-dependencies]
+cc = "1.0"

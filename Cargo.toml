@@ -1,0 +1,4 @@
+[workspace]
+members = ["services/tachann","native/qnnshim"]
+default-members = ["services/tachann"]
+resolver="2"

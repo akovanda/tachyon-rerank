@@ -1,0 +1,33 @@
+{
+  "name": "semantic_search",
+  "use_case": "Local semantic search over a small note/document corpus",
+  "metric": "cosine",
+  "corpus": [
+    {
+      "id": "doc_embeddings",
+      "title": "Embeddings for local search",
+      "text": "Use embeddings to search notes and documents by meaning instead of keywords.",
+      "embedding": [0.95, 0.10, 0.05, 0.0]
+    },
+    {
+      "id": "doc_rust_async",
+      "title": "Rust async handlers",
+      "text": "Build async HTTP handlers in Rust using Actix and structured state.",
+      "embedding": [0.10, 0.85, 0.05, 0.0]
+    },
+    {
+      "id": "doc_sourdough",
+      "title": "Sourdough starter guide",
+      "text": "Feed your starter every day and keep it at room temperature.",
+      "embedding": [0.0, 0.0, 0.05, 0.95]
+    }
+  ],
+  "queries": [
+    {
+      "id": "q_semantic",
+      "text": "Find notes about embedding search for docs.",
+      "embedding": [0.98, 0.05, 0.0, 0.0],
+      "expected_order": ["doc_embeddings", "doc_rust_async", "doc_sourdough"]
+    }
+  ]
+}

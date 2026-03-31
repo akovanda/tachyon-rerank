@@ -1,0 +1,39 @@
+{
+  "name": "rag_rerank",
+  "use_case": "RAG reranking over a retrieved candidate set",
+  "metric": "cosine",
+  "corpus": [
+    {
+      "id": "pass_qnn_sdk",
+      "title": "QNN SDK root",
+      "text": "QNN_SDK_ROOT points to the QAIRT installation root used to locate the runtime libraries.",
+      "embedding": [0.05, 0.20, 0.95, 0.0]
+    },
+    {
+      "id": "pass_adsp_path",
+      "title": "ADSP path",
+      "text": "ADSP_LIBRARY_PATH should include hexagon-v68/unsigned, /usr/lib/rfsa/adsp, and /dsp on Tachyon Particle.",
+      "embedding": [0.05, 0.35, 0.90, 0.0]
+    },
+    {
+      "id": "pass_license",
+      "title": "License",
+      "text": "The project is licensed under MIT.",
+      "embedding": [0.0, 0.0, 0.50, 0.60]
+    }
+  ],
+  "queries": [
+    {
+      "id": "q_sdk_root",
+      "text": "Which env var points to the QNN SDK root?",
+      "embedding": [0.0, 0.15, 0.98, 0.0],
+      "expected_order": ["pass_qnn_sdk", "pass_adsp_path", "pass_license"]
+    },
+    {
+      "id": "q_dsp_path",
+      "text": "What should ADSP_LIBRARY_PATH include on Tachyon Particle?",
+      "embedding": [0.0, 0.40, 0.92, 0.0],
+      "expected_order": ["pass_adsp_path", "pass_qnn_sdk", "pass_license"]
+    }
+  ]
+}

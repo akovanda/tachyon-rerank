@@ -1,0 +1,55 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='640' height='400' viewBox='0 0 640 400'>
+<rect width='100%' height='100%' fill='white' />
+<text x='320.0' y='28' text-anchor='middle' font-family='sans-serif' font-size='16'>High-Dim Embeddings (8K candidates x 768 dims): p50 latency vs q_batch</text>
+<line x1='60' y1='340' x2='580' y2='340' stroke='#333' stroke-width='1' />
+<line x1='60' y1='340' x2='60' y2='60' stroke='#333' stroke-width='1' />
+<line x1='56' y1='340.0' x2='60' y2='340.0' stroke='#333' stroke-width='1' />
+<text x='52' y='344.0' text-anchor='end' font-family='sans-serif' font-size='10'>0.0</text>
+<line x1='60' y1='340.0' x2='580' y2='340.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='284.0' x2='60' y2='284.0' stroke='#333' stroke-width='1' />
+<text x='52' y='288.0' text-anchor='end' font-family='sans-serif' font-size='10'>366.9</text>
+<line x1='60' y1='284.0' x2='580' y2='284.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='228.0' x2='60' y2='228.0' stroke='#333' stroke-width='1' />
+<text x='52' y='232.0' text-anchor='end' font-family='sans-serif' font-size='10'>733.8</text>
+<line x1='60' y1='228.0' x2='580' y2='228.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='172.0' x2='60' y2='172.0' stroke='#333' stroke-width='1' />
+<text x='52' y='176.0' text-anchor='end' font-family='sans-serif' font-size='10'>1100.8</text>
+<line x1='60' y1='172.0' x2='580' y2='172.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='116.0' x2='60' y2='116.0' stroke='#333' stroke-width='1' />
+<text x='52' y='120.0' text-anchor='end' font-family='sans-serif' font-size='10'>1467.7</text>
+<line x1='60' y1='116.0' x2='580' y2='116.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='60.00000000000006' x2='60' y2='60.00000000000006' stroke='#333' stroke-width='1' />
+<text x='52' y='64.00000000000006' text-anchor='end' font-family='sans-serif' font-size='10'>1834.6</text>
+<line x1='60' y1='60.00000000000006' x2='580' y2='60.00000000000006' stroke='#eee' stroke-width='1' />
+<line x1='60.0' y1='340' x2='60.0' y2='344' stroke='#333' stroke-width='1' />
+<text x='60.0' y='358' text-anchor='middle' font-family='sans-serif' font-size='10'>1</text>
+<line x1='164.0' y1='340' x2='164.0' y2='344' stroke='#333' stroke-width='1' />
+<text x='164.0' y='358' text-anchor='middle' font-family='sans-serif' font-size='10'>2</text>
+<line x1='268.0' y1='340' x2='268.0' y2='344' stroke='#333' stroke-width='1' />
+<text x='268.0' y='358' text-anchor='middle' font-family='sans-serif' font-size='10'>4</text>
+<line x1='372.0' y1='340' x2='372.0' y2='344' stroke='#333' stroke-width='1' />
+<text x='372.0' y='358' text-anchor='middle' font-family='sans-serif' font-size='10'>8</text>
+<line x1='476.0' y1='340' x2='476.0' y2='344' stroke='#333' stroke-width='1' />
+<text x='476.0' y='358' text-anchor='middle' font-family='sans-serif' font-size='10'>16</text>
+<line x1='580.0' y1='340' x2='580.0' y2='344' stroke='#333' stroke-width='1' />
+<text x='580.0' y='358' text-anchor='middle' font-family='sans-serif' font-size='10'>32</text>
+<polyline fill='none' stroke='#1f77b4' stroke-width='2' points='60.0,331.819430052802 164.0,324.1303047927304 268.0,307.29450869430843 372.0,276.4952733334024 476.0,213.39041780974617 580.0,85.45454545454547' />
+<circle cx='60.0' cy='331.819430052802' r='3' fill='#1f77b4' />
+<circle cx='164.0' cy='324.1303047927304' r='3' fill='#1f77b4' />
+<circle cx='268.0' cy='307.29450869430843' r='3' fill='#1f77b4' />
+<circle cx='372.0' cy='276.4952733334024' r='3' fill='#1f77b4' />
+<circle cx='476.0' cy='213.39041780974617' r='3' fill='#1f77b4' />
+<circle cx='580.0' cy='85.45454545454547' r='3' fill='#1f77b4' />
+<polyline fill='none' stroke='#2ca02c' stroke-width='2' points='60.0,331.7980628924921 164.0,328.0481262581142 268.0,320.8519719109055 372.0,310.42785013117367 476.0,294.15523132948977 580.0,259.1085097441337' />
+<circle cx='60.0' cy='331.7980628924921' r='3' fill='#2ca02c' />
+<circle cx='164.0' cy='328.0481262581142' r='3' fill='#2ca02c' />
+<circle cx='268.0' cy='320.8519719109055' r='3' fill='#2ca02c' />
+<circle cx='372.0' cy='310.42785013117367' r='3' fill='#2ca02c' />
+<circle cx='476.0' cy='294.15523132948977' r='3' fill='#2ca02c' />
+<circle cx='580.0' cy='259.1085097441337' r='3' fill='#2ca02c' />
+<rect x='440' y='62' width='10' height='10' fill='#1f77b4' />
+<text x='456' y='70' font-family='sans-serif' font-size='10'>cpu</text>
+<rect x='440' y='78' width='10' height='10' fill='#2ca02c' />
+<text x='456' y='86' font-family='sans-serif' font-size='10'>qnn</text>
+<text x='320.0' y='390' text-anchor='middle' font-family='sans-serif' font-size='11'>q_batch</text>
+</svg>

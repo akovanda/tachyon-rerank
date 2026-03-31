@@ -1,0 +1,31 @@
+[package]
+name="tachyon-ann"
+version="0.1.0"
+edition="2021"
+description="Retrieval-first ANN microservice with QNN-first edge acceleration and CPU fallback."
+license="MIT"
+
+[dev-dependencies]
+criterion = "0.5" 
+rand = "0.8"
+
+[[bin]]
+name = "tachann-bench"
+path = "src/bin/bench.rs"
+
+[dependencies]
+actix-web="4"
+serde={version="1",features=["derive"]}
+serde_json="1"
+once_cell="1.19"
+anyhow="1.0"
+rayon="1.10"
+ndarray={version="0.15",features=["rayon"]}
+ort = { version = "2.0.0-rc.10", features = ["load-dynamic","ndarray"] }
+libloading="0.8"
+log="0.4"
+env_logger="0.11"
+thiserror="1.0"
+num_cpus = "1.16"
+rand = "0.8"
+clap = { version = "4", features = ["derive"] }

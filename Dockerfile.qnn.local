@@ -1,0 +1,97 @@
+# syntax=docker/dockerfile:1.6
+
+#############################################
+# Local-only QNN builder
+#############################################
+FROM rust:1.85.0-slim-bookworm AS builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates pkg-config clang build-essential libssl-dev git \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV CC=clang CXX=clang++
+WORKDIR /src
+
+# This image is intended for local development where QAIRT and ONNX runtime
+# assets are already available in the build context. It is not the public,
+# portable Docker path.
+ARG QNN_VERSION=2.37.0.250724
+ARG QNN_SDK_ROOT=/opt/qairt
+ENV QNN_SDK_ROOT=${QNN_SDK_ROOT}
+
+RUN mkdir -p ${QNN_SDK_ROOT}
+COPY qairt/${QNN_VERSION}/ ${QNN_SDK_ROOT}/
+
+COPY Cargo.toml Cargo.lock ./
+COPY services/tachann/Cargo.toml services/tachann/Cargo.toml
+COPY native/qnnshim/Cargo.toml native/qnnshim/Cargo.toml
+COPY native/qnnshim/build.rs native/qnnshim/build.rs
+COPY native/qnnshim/src/lib.rs native/qnnshim/src/lib.rs
+
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/src/target \
+    cargo fetch
+
+COPY services services
+COPY native native
+COPY scripts scripts
+COPY models models
+
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/src/target \
+    set -eux; \
+    cargo build --release -p tachyon_qnnshim; \
+    cargo build --release -p tachyon-ann --bin tachyon-ann; \
+    if [ -f services/tachann/src/bin/bench.rs ]; then \
+      cargo build --release -p tachyon-ann --bin tachann-bench; \
+    fi; \
+    mkdir -p /out/bin /out/lib; \
+    cp -v target/release/tachyon-ann /out/bin/; \
+    [ -f target/release/tachann-bench ] && cp -v target/release/tachann-bench /out/bin/ || true; \
+    cp -v target/release/libtachyon_qnnshim.so /out/lib/; \
+    ln -sf libtachyon_qnnshim.so /out/lib/libtachann_qnnshim.so
+
+#############################################
+# Local-only QNN runtime
+#############################################
+FROM debian:bookworm-slim AS runtime
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN set -eux; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends \
+    ca-certificates curl bash \
+    libgcc-s1 libstdc++6 \
+    libc++1 libc++abi1 libunwind8 \
+    libgomp1 libnuma1 \
+    libssl3 \
+  ; rm -rf /var/lib/apt/lists/*
+
+ENV APP_DIR=/app
+WORKDIR ${APP_DIR}
+
+COPY --from=builder /out/bin/ ${APP_DIR}/bin/
+COPY --from=builder /out/lib/ ${APP_DIR}/lib/
+COPY --from=builder /src/models/ ${APP_DIR}/models/
+
+ARG QNN_SDK_ROOT=/opt/qairt
+COPY --from=builder ${QNN_SDK_ROOT}/ /opt/qairt/
+
+RUN mkdir -p /opt/onnx/lib
+COPY runtime-libs/onnx/ /opt/onnx/lib/
+
+COPY scripts/entrypoint.sh ${APP_DIR}/entrypoint.sh
+RUN chmod +x ${APP_DIR}/entrypoint.sh
+
+ENV ORT_DYLIB_PATH=/opt/onnx/lib/libonnxruntime.so \
+    QNN_SDK_ROOT=/opt/qairt \
+    LD_LIBRARY_PATH=/opt/qairt/lib:/opt/qairt/lib/aarch64-ubuntu-gcc9.4:/opt/qairt/lib/aarch64-oe-linux-gcc9.3:/opt/qairt/lib/aarch64-oe-linux-gcc11.2:/opt/qairt/lib/aarch64-oe-linux-gcc8.2:/opt/onnx/lib:/app/lib \
+    TACHANN_QNN_BACKEND=htp \
+    TACHANN_QNN_FP16=1 \
+    TACHANN_QNN_LIB=/app/lib/libtachyon_qnnshim.so \
+    TACHANN_BACKEND=qnn \
+    RUST_LOG=info
+
+EXPOSE 8080
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["/app/bin/tachyon-ann"]

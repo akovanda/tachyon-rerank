@@ -1,0 +1,52 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='640' height='320' viewBox='0 0 640 320'>
+<rect width='100%' height='100%' fill='white' />
+<text x='320.0' y='28' text-anchor='middle' font-family='sans-serif' font-size='16'>High-Dim Embeddings (8K candidates x 768 dims): CPU/QNN speedup</text>
+<line x1='60' y1='260' x2='580' y2='260' stroke='#333' stroke-width='1' />
+<line x1='60' y1='260' x2='60' y2='60' stroke='#333' stroke-width='1' />
+<line x1='56' y1='260.0' x2='60' y2='260.0' stroke='#333' stroke-width='1' />
+<text x='52' y='264.0' text-anchor='end' font-family='sans-serif' font-size='10'>0.0x</text>
+<line x1='60' y1='260.0' x2='580' y2='260.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='220.0' x2='60' y2='220.0' stroke='#333' stroke-width='1' />
+<text x='52' y='224.0' text-anchor='end' font-family='sans-serif' font-size='10'>0.7x</text>
+<line x1='60' y1='220.0' x2='580' y2='220.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='180.0' x2='60' y2='180.0' stroke='#333' stroke-width='1' />
+<text x='52' y='184.0' text-anchor='end' font-family='sans-serif' font-size='10'>1.4x</text>
+<line x1='60' y1='180.0' x2='580' y2='180.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='140.0' x2='60' y2='140.0' stroke='#333' stroke-width='1' />
+<text x='52' y='144.0' text-anchor='end' font-family='sans-serif' font-size='10'>2.2x</text>
+<line x1='60' y1='140.0' x2='580' y2='140.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='100.0' x2='60' y2='100.0' stroke='#333' stroke-width='1' />
+<text x='52' y='104.0' text-anchor='end' font-family='sans-serif' font-size='10'>2.9x</text>
+<line x1='60' y1='100.0' x2='580' y2='100.0' stroke='#eee' stroke-width='1' />
+<line x1='56' y1='60.0' x2='60' y2='60.0' stroke='#333' stroke-width='1' />
+<text x='52' y='64.0' text-anchor='end' font-family='sans-serif' font-size='10'>3.6x</text>
+<line x1='60' y1='60.0' x2='580' y2='60.0' stroke='#eee' stroke-width='1' />
+<line x1='60' y1='204.73252218543297' x2='580' y2='204.73252218543297' stroke='#d62728' stroke-dasharray='4 4' stroke-width='1' />
+<text x='580' y='198.73252218543297' text-anchor='end' font-family='sans-serif' font-size='10' fill='#d62728'>1.0x = parity</text>
+<rect x='46.0' y='204.8765014726313' width='28' height='55.123498527368696' fill='#2ca02c' opacity='0.85' />
+<text x='60.0' y='198.8765014726313' text-anchor='middle' font-family='sans-serif' font-size='10'>1.00x</text>
+<line x1='60.0' y1='260' x2='60.0' y2='264' stroke='#333' stroke-width='1' />
+<text x='60.0' y='278' text-anchor='middle' font-family='sans-serif' font-size='10'>1</text>
+<rect x='150.0' y='186.6158556613628' width='28' height='73.38414433863721' fill='#2ca02c' opacity='0.85' />
+<text x='164.0' y='180.6158556613628' text-anchor='middle' font-family='sans-serif' font-size='10'>1.33x</text>
+<line x1='164.0' y1='260' x2='164.0' y2='264' stroke='#333' stroke-width='1' />
+<text x='164.0' y='278' text-anchor='middle' font-family='sans-serif' font-size='10'>2</text>
+<rect x='254.0' y='165.60124485187652' width='28' height='94.39875514812348' fill='#2ca02c' opacity='0.85' />
+<text x='268.0' y='159.60124485187652' text-anchor='middle' font-family='sans-serif' font-size='10'>1.71x</text>
+<line x1='268.0' y1='260' x2='268.0' y2='264' stroke='#333' stroke-width='1' />
+<text x='268.0' y='278' text-anchor='middle' font-family='sans-serif' font-size='10'>4</text>
+<rect x='358.0' y='141.31582966627167' width='28' height='118.68417033372833' fill='#2ca02c' opacity='0.85' />
+<text x='372.0' y='135.31582966627167' text-anchor='middle' font-family='sans-serif' font-size='10'>2.15x</text>
+<line x1='372.0' y1='260' x2='372.0' y2='264' stroke='#333' stroke-width='1' />
+<text x='372.0' y='278' text-anchor='middle' font-family='sans-serif' font-size='10'>8</text>
+<rect x='462.0' y='107.36770458801442' width='28' height='152.63229541198558' fill='#2ca02c' opacity='0.85' />
+<text x='476.0' y='101.36770458801442' text-anchor='middle' font-family='sans-serif' font-size='10'>2.76x</text>
+<line x1='476.0' y1='260' x2='476.0' y2='264' stroke='#333' stroke-width='1' />
+<text x='476.0' y='278' text-anchor='middle' font-family='sans-serif' font-size='10'>16</text>
+<rect x='566.0' y='86.0869565217391' width='28' height='173.9130434782609' fill='#2ca02c' opacity='0.85' />
+<text x='580.0' y='80.0869565217391' text-anchor='middle' font-family='sans-serif' font-size='10'>3.15x</text>
+<line x1='580.0' y1='260' x2='580.0' y2='264' stroke='#333' stroke-width='1' />
+<text x='580.0' y='278' text-anchor='middle' font-family='sans-serif' font-size='10'>32</text>
+<text x='320.0' y='310' text-anchor='middle' font-family='sans-serif' font-size='11'>q_batch</text>
+<text transform='translate(16 160.0) rotate(-90)' text-anchor='middle' font-family='sans-serif' font-size='11'>CPU latency / QNN latency</text>
+</svg>

@@ -1,0 +1,21 @@
+# Ignore everything by default
+**
+
+# Allow only what the build needs
+!Cargo.toml
+!Cargo.lock
+!.cargo/**
+!services/**
+!native/**
+!scripts/**
+!Dockerfile
+!Dockerfile.qnn.local
+!docker-compose.yml
+!docker-compose.qnn.local.yml
+!runtime-libs/**
+!qairt/**
+
+
+# (optional) keep README/license
+!README*
+!LICENSE*

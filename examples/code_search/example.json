@@ -1,0 +1,39 @@
+{
+  "name": "code_search",
+  "use_case": "Code-chunk reranking for developer search",
+  "metric": "cosine",
+  "corpus": [
+    {
+      "id": "chunk_score_batch",
+      "title": "Batched score handler",
+      "text": "POST /score_batch scores many query vectors against a shared candidate matrix.",
+      "embedding": [0.15, 0.95, 0.05, 0.0]
+    },
+    {
+      "id": "chunk_qnn_env",
+      "title": "QNN runtime env",
+      "text": "Set QNN_SDK_ROOT, LD_LIBRARY_PATH, and ADSP_LIBRARY_PATH before using the HTP backend.",
+      "embedding": [0.05, 0.70, 0.90, 0.0]
+    },
+    {
+      "id": "chunk_cpu_fallback",
+      "title": "CPU fallback",
+      "text": "When the accelerated runtime is unavailable, the request falls back to the CPU path.",
+      "embedding": [0.05, 0.60, 0.35, 0.0]
+    }
+  ],
+  "queries": [
+    {
+      "id": "q_batching",
+      "text": "Where is the batched scoring path?",
+      "embedding": [0.05, 0.98, 0.05, 0.0],
+      "expected_order": ["chunk_score_batch", "chunk_cpu_fallback", "chunk_qnn_env"]
+    },
+    {
+      "id": "q_setup",
+      "text": "How do I set up the QNN environment variables?",
+      "embedding": [0.0, 0.55, 0.90, 0.0],
+      "expected_order": ["chunk_qnn_env", "chunk_cpu_fallback", "chunk_score_batch"]
+    }
+  ]
+}

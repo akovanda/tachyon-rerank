@@ -1,0 +1,13 @@
+services:
+  tachann:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tachann:cpu
+    command: ["/app/tachyon-ann"]
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      TACHANN_BACKEND: cpu
+      RUST_LOG: info
