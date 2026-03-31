@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,8 +17,12 @@ jobs:
         uses: dtolnay/rust-toolchain@1.85.0
         with:
           components: rustfmt, clippy
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
       - name: Format
         run: cargo fmt --all --check
+      - name: Dependency Audit
+        run: cargo audit
       - name: Shell Script Syntax
         run: bash -n scripts/check_runtime.sh
       - name: Python Script Syntax

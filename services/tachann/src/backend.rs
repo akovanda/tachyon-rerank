@@ -51,6 +51,7 @@ impl BackendKind {
     }
 }
 
+#[derive(Debug)]
 pub struct RerankResult {
     pub distances: Vec<f32>,
 }
@@ -163,6 +164,60 @@ fn l2_sq_from_dot(a_sumsq: f64, q_sumsq: f64, dot: f64) -> f32 {
     (a_sumsq + q_sumsq - 2.0 * dot).max(0.0) as f32
 }
 
+pub(crate) fn validate_score_input(
+    q: &[f32],
+    a: &[Vec<f32>],
+    max_batch: Option<usize>,
+) -> Result<()> {
+    validate_max_batch(max_batch)?;
+    validate_candidates(a, q.len())
+}
+
+pub(crate) fn validate_score_batch_input(
+    qs: &[Vec<f32>],
+    a: &[Vec<f32>],
+    max_batch: Option<usize>,
+) -> Result<()> {
+    validate_max_batch(max_batch)?;
+    if qs.is_empty() {
+        return Err(anyhow!("qs must be non-empty"));
+    }
+    let d = qs[0].len();
+    if qs.iter().any(|q| q.len() != d) {
+        return Err(anyhow!("all queries in qs must have the same dimension"));
+    }
+    validate_candidates(a, d)
+}
+
+fn validate_max_batch(max_batch: Option<usize>) -> Result<()> {
+    if matches!(max_batch, Some(0)) {
+        return Err(anyhow!("max_batch must be >= 1"));
+    }
+    Ok(())
+}
+
+fn validate_candidates(a: &[Vec<f32>], d: usize) -> Result<()> {
+    if d == 0 || a.is_empty() {
+        return Err(anyhow!("q and a must be non-empty"));
+    }
+    if a.iter().any(|row| row.len() != d) {
+        return Err(anyhow!("all rows in a must have len == len(q)"));
+    }
+    Ok(())
+}
+
+fn validated_chunk(max_batch: Option<usize>, default_chunk: usize, n: usize) -> Result<usize> {
+    let chunk = max_batch.unwrap_or(default_chunk);
+    if chunk == 0 {
+        return if max_batch == Some(0) {
+            Err(anyhow!("max_batch must be >= 1"))
+        } else {
+            Err(anyhow!("configured chunk size must be >= 1"))
+        };
+    }
+    Ok(chunk.min(n.max(1)))
+}
+
 // ----------------- CPU -----------------
 #[derive(Default)]
 pub struct CpuBackend;
@@ -194,6 +249,7 @@ impl Backend for CpuBackend {
         metric: DistMetric,
         max_batch: Option<usize>,
     ) -> Result<RerankResult> {
+        validate_score_input(q, a, max_batch)?;
         let (max_dim, max_cand, default_chunk) = CpuBackend::cfg();
         let d = q.len();
         let n = a.len();
@@ -203,7 +259,7 @@ impl Backend for CpuBackend {
         if n > max_cand {
             return Err(anyhow!("candidates {} exceeds {}", n, max_cand));
         }
-        let chunk = max_batch.unwrap_or(default_chunk).min(n.max(1));
+        let chunk = validated_chunk(max_batch, default_chunk, n)?;
 
         let q_sumsq = sumsq64(q);
         let q_norm = if let DistMetric::Cosine = metric {
@@ -469,6 +525,7 @@ impl Backend for OrtBackend {
         metric: DistMetric,
         max_batch: Option<usize>,
     ) -> Result<RerankResult> {
+        validate_score_input(q, a, max_batch)?;
         let d = q.len();
         let n = a.len();
         if self.baked_a {
@@ -505,7 +562,7 @@ impl Backend for OrtBackend {
         let chunk = if self.static_dims.is_some() {
             n.max(1)
         } else {
-            max_batch.unwrap_or(self.chunk).min(n.max(1))
+            validated_chunk(max_batch, self.chunk, n)?
         };
 
         let q_sumsq = sumsq64(q);
@@ -915,6 +972,7 @@ impl Backend for QnnBackend {
         metric: DistMetric,
         max_batch: Option<usize>,
     ) -> Result<RerankResult> {
+        validate_score_input(q, a, max_batch)?;
         let d = q.len();
         let n = a.len();
         if d > self.max_dim {
@@ -923,7 +981,7 @@ impl Backend for QnnBackend {
         if n > self.max_cand {
             return Err(anyhow!("candidates {} exceeds {}", n, self.max_cand));
         }
-        let chunk = max_batch.unwrap_or(self.chunk).min(n.max(1));
+        let chunk = validated_chunk(max_batch, self.chunk, n)?;
 
         let q_sumsq = sumsq64(q);
         let q_norm = if let DistMetric::Cosine = metric {
@@ -1045,10 +1103,8 @@ impl Backend for QnnBackend {
         metric: DistMetric,
         max_batch: Option<usize>,
     ) -> Result<Vec<RerankResult>> {
+        validate_score_batch_input(qs, a, max_batch)?;
         let b = qs.len();
-        if b == 0 {
-            return Ok(Vec::new());
-        }
         if b == 1 {
             return Ok(vec![self.distance(&qs[0], a, metric, max_batch)?]);
         }
@@ -1589,6 +1645,7 @@ impl RuntimeRouter {
         metric: DistMetric,
         max_batch: Option<usize>,
     ) -> Result<RerankResult> {
+        validate_score_input(q, a, max_batch)?;
         let (kind, route_reason, fallback_reason) =
             self.choose_backend_for_batch(a.len(), q.len(), 1);
         match self.run_single_on(kind, q, a, metric, max_batch) {
@@ -1619,6 +1676,7 @@ impl RuntimeRouter {
         max_batch: Option<usize>,
     ) -> Result<Vec<RerankResult>> {
         let q_batch = qs.len();
+        validate_score_batch_input(qs, a, max_batch)?;
         let d = qs.first().map(|q| q.len()).unwrap_or(0);
         let (kind, route_reason, fallback_reason) =
             self.choose_backend_for_batch(a.len(), d, q_batch);
@@ -1723,5 +1781,50 @@ mod tests {
     fn adaptive_profile_prefers_cpu_for_large_singleton_high_dim() {
         assert!(adaptive_prefers_cpu(8192, 768, 1));
         assert!(!adaptive_prefers_cpu(1024, 128, 4));
+    }
+
+    #[test]
+    fn direct_router_rejects_zero_max_batch() {
+        let router = RuntimeRouter::forced_cpu();
+        let err = router
+            .score(&[1.0, 0.0], &[vec![1.0, 0.0]], DistMetric::Ip, Some(0))
+            .unwrap_err();
+        assert!(err.to_string().contains("max_batch must be >= 1"));
+    }
+
+    #[test]
+    fn direct_router_rejects_mismatched_candidate_dims_without_panic() {
+        let router = RuntimeRouter::forced_cpu();
+        let err = router
+            .score(&[1.0, 0.0], &[vec![1.0]], DistMetric::Ip, Some(8))
+            .unwrap_err();
+        assert!(err
+            .to_string()
+            .contains("all rows in a must have len == len(q)"));
+    }
+
+    #[test]
+    fn cpu_backend_rejects_mismatched_candidate_dims_without_panic() {
+        let backend = CpuBackend;
+        let err = backend
+            .distance(&[1.0, 0.0], &[vec![1.0]], DistMetric::Ip, Some(8))
+            .unwrap_err();
+        assert!(err
+            .to_string()
+            .contains("all rows in a must have len == len(q)"));
+    }
+
+    #[test]
+    fn direct_router_batch_rejects_zero_max_batch() {
+        let router = RuntimeRouter::forced_cpu();
+        let err = router
+            .score_batch(
+                &[vec![1.0, 0.0], vec![0.0, 1.0]],
+                &[vec![1.0, 0.0], vec![0.0, 1.0]],
+                DistMetric::Ip,
+                Some(0),
+            )
+            .unwrap_err();
+        assert!(err.to_string().contains("max_batch must be >= 1"));
     }
 }

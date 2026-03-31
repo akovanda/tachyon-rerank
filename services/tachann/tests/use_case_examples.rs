@@ -1,81 +1,23 @@
+mod common;
+
 use actix_web::test as aw_test;
 use actix_web::{web, App};
+use common::{
+    assert_fixture_orders_match_reference, corpus_matrix, example_names, load_fixture,
+    metric_from_str, repo_root, sort_ids_by_distances,
+};
 use once_cell::sync::Lazy;
-use serde::Deserialize;
-use std::cmp::Ordering;
 use std::fs;
-use std::path::PathBuf;
 use std::sync::Mutex;
 use tachyon_rerank::api::{
     configure, AppState, ScoreBatchRequest, ScoreBatchResponse, ScoreRequest, ScoreResponse,
 };
-use tachyon_rerank::backend::{DistMetric, RuntimeRouter};
+use tachyon_rerank::backend::RuntimeRouter;
 
 static ENV_LOCK: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
 
-#[derive(Debug, Deserialize)]
-struct ExampleFixture {
-    metric: String,
-    corpus: Vec<Candidate>,
-    queries: Vec<Query>,
-}
-
-#[derive(Debug, Deserialize)]
-struct Candidate {
-    id: String,
-    embedding: Vec<f32>,
-}
-
-#[derive(Debug, Deserialize)]
-struct Query {
-    id: String,
-    embedding: Vec<f32>,
-    expected_order: Vec<String>,
-}
-
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..")
-}
-
-fn example_names() -> [&'static str; 3] {
-    ["semantic_search", "code_search", "rag_rerank"]
-}
-
-fn load_fixture(name: &str) -> ExampleFixture {
-    let path = repo_root().join("examples").join(name).join("example.json");
-    serde_json::from_str(&fs::read_to_string(path).expect("example fixture"))
-        .expect("valid example fixture")
-}
-
-fn metric_from_str(metric: &str) -> DistMetric {
-    match metric {
-        "cosine" => DistMetric::Cosine,
-        "ip" => DistMetric::Ip,
-        "l2" | "euclidean" => DistMetric::L2,
-        other => panic!("unsupported fixture metric: {other}"),
-    }
-}
-
 fn cpu_state() -> web::Data<AppState> {
     web::Data::new(AppState::new(RuntimeRouter::forced_cpu()))
-}
-
-fn sorted_ids(corpus: &[Candidate], distances: &[f32]) -> Vec<String> {
-    let mut ranked: Vec<_> = corpus
-        .iter()
-        .map(|item| item.id.clone())
-        .zip(distances.iter().copied())
-        .collect();
-    ranked.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(Ordering::Equal));
-    ranked.into_iter().map(|(id, _)| id).collect()
-}
-
-fn corpus_matrix(fixture: &ExampleFixture) -> Vec<Vec<f32>> {
-    fixture
-        .corpus
-        .iter()
-        .map(|item| item.embedding.clone())
-        .collect()
 }
 
 fn with_env_var<T>(key: &str, value: Option<&str>, f: impl FnOnce() -> T) -> T {
@@ -99,12 +41,21 @@ fn optional_accel_tests_enabled() -> bool {
         == Some("1")
 }
 
+#[test]
+fn fixture_expected_orders_match_reference_math() {
+    for name in example_names() {
+        let fixture = load_fixture(name);
+        assert_fixture_orders_match_reference(name, &fixture);
+    }
+}
+
 #[actix_web::test]
 async fn example_fixtures_match_expected_rankings() {
     let app = aw_test::init_service(App::new().app_data(cpu_state()).configure(configure)).await;
 
     for name in example_names() {
         let fixture = load_fixture(name);
+        assert_fixture_orders_match_reference(name, &fixture);
         let req = aw_test::TestRequest::post()
             .uri("/score_batch")
             .set_json(ScoreBatchRequest {
@@ -127,7 +78,7 @@ async fn example_fixtures_match_expected_rankings() {
         );
         for (query, distances) in fixture.queries.iter().zip(resp.distances.iter()) {
             assert_eq!(
-                sorted_ids(&fixture.corpus, distances),
+                sort_ids_by_distances(&fixture.corpus, distances),
                 query.expected_order,
                 "fixture {name} query {}",
                 query.id
@@ -193,7 +144,7 @@ async fn score_and_score_batch_agree_for_example_fixtures() {
 fn request_payloads_match_example_fixtures() {
     for name in example_names() {
         let fixture = load_fixture(name);
-        let dir = repo_root().join("examples").join(name);
+        let dir = common::repo_root().join("examples").join(name);
         let corpus = corpus_matrix(&fixture);
 
         let score_path = dir.join("request.score.json");

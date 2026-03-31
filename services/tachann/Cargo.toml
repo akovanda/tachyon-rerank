@@ -8,6 +8,11 @@ license="MIT"
 [dev-dependencies]
 criterion = "0.5" 
 rand = "0.8"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+
+[[bin]]
+name = "tachyon-rerank"
+path = "src/main.rs"
 
 [[bin]]
 name = "tachyon-rerank-bench"

@@ -36,8 +36,11 @@ RUN set -eux; \
     libssl3 \
   ; rm -rf /var/lib/apt/lists/*
 
+RUN useradd --system --create-home --home-dir /app appuser
+
 WORKDIR /app
 COPY --from=builder /src/target/release/tachyon-rerank /app/tachyon-rerank
 
 EXPOSE 8080
+USER appuser
 ENTRYPOINT ["/app/tachyon-rerank"]

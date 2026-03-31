@@ -2,7 +2,9 @@ use actix_web::{get, post, web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
-use crate::backend::{DistMetric, RuntimeRouter, RuntimeStatus};
+use crate::backend::{
+    validate_score_batch_input, validate_score_input, DistMetric, RuntimeRouter, RuntimeStatus,
+};
 
 #[derive(Clone)]
 pub struct AppState {
@@ -61,16 +63,8 @@ fn parse_metric(metric: Option<&str>) -> Result<DistMetric, HttpResponse> {
     }
 }
 
-fn validate_candidates(a: &[Vec<f32>], d: usize) -> Result<(), HttpResponse> {
-    if d == 0 || a.is_empty() {
-        return Err(HttpResponse::BadRequest()
-            .json(serde_json::json!({"error":"q and a must be non-empty"})));
-    }
-    if a.iter().any(|row| row.len() != d) {
-        return Err(HttpResponse::BadRequest()
-            .json(serde_json::json!({"error":"all rows in a must have len == len(q)"})));
-    }
-    Ok(())
+fn bad_request(err: anyhow::Error) -> HttpResponse {
+    HttpResponse::BadRequest().json(serde_json::json!({ "error": err.to_string() }))
 }
 
 #[get("/info")]
@@ -85,8 +79,8 @@ async fn score(state: web::Data<AppState>, payload: web::Json<ScoreRequest>) -> 
         Err(resp) => return resp,
     };
 
-    if let Err(resp) = validate_candidates(&payload.a, payload.q.len()) {
-        return resp;
+    if let Err(err) = validate_score_input(&payload.q, &payload.a, payload.max_batch) {
+        return bad_request(err);
     }
 
     match state
@@ -112,17 +106,8 @@ async fn score_batch(
         Err(resp) => return resp,
     };
 
-    if payload.qs.is_empty() {
-        return HttpResponse::BadRequest()
-            .json(serde_json::json!({"error":"qs must be non-empty"}));
-    }
-    let d = payload.qs[0].len();
-    if payload.qs.iter().any(|q| q.len() != d) {
-        return HttpResponse::BadRequest()
-            .json(serde_json::json!({"error":"all queries in qs must have the same dimension"}));
-    }
-    if let Err(resp) = validate_candidates(&payload.a, d) {
-        return resp;
+    if let Err(err) = validate_score_batch_input(&payload.qs, &payload.a, payload.max_batch) {
+        return bad_request(err);
     }
 
     match state
@@ -255,6 +240,42 @@ mod tests {
                 a: vec![vec![1.0, 0.0]],
                 metric: Some("cosine".into()),
                 max_batch: None,
+            })
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+
+        assert_eq!(resp.status(), StatusCode::BAD_REQUEST);
+    }
+
+    #[actix_web::test]
+    async fn score_rejects_zero_max_batch() {
+        let app = test::init_service(App::new().app_data(cpu_state()).configure(configure)).await;
+
+        let req = test::TestRequest::post()
+            .uri("/score")
+            .set_json(ScoreRequest {
+                q: vec![1.0, 0.0],
+                a: vec![vec![1.0, 0.0]],
+                metric: Some("ip".into()),
+                max_batch: Some(0),
+            })
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+
+        assert_eq!(resp.status(), StatusCode::BAD_REQUEST);
+    }
+
+    #[actix_web::test]
+    async fn score_batch_rejects_zero_max_batch() {
+        let app = test::init_service(App::new().app_data(cpu_state()).configure(configure)).await;
+
+        let req = test::TestRequest::post()
+            .uri("/score_batch")
+            .set_json(ScoreBatchRequest {
+                qs: vec![vec![1.0, 0.0]],
+                a: vec![vec![1.0, 0.0]],
+                metric: Some("ip".into()),
+                max_batch: Some(0),
             })
             .to_request();
         let resp = test::call_service(&app, req).await;

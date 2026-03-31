@@ -28,17 +28,21 @@ cargo build -p tachyon-rerank
 ```bash
 cargo test -p tachyon-rerank
 ```
-2. Run format checks.
+2. Run the black-box end-to-end server tests.
+```bash
+cargo test -p tachyon-rerank --test e2e_server
+```
+3. Run format checks.
 ```bash
 cargo fmt --all --check
 ```
-3. Run clippy.
+4. Run clippy.
 ```bash
 cargo clippy -p tachyon-rerank --all-targets -- -D warnings
 ```
-4. Optional accelerator parity tests are opt-in:
+5. Optional accelerator parity and QNN end-to-end tests are opt-in:
 ```bash
-TACHANN_RUN_OPTIONAL_ACCEL_TESTS=1 cargo test -p tachyon-rerank --test use_case_examples optional_
+TACHANN_RUN_OPTIONAL_ACCEL_TESTS=1 cargo test -p tachyon-rerank optional_
 ```
 
 **Examples and Docs**

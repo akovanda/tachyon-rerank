@@ -1,4 +1,4 @@
-.PHONY: build build-release build-qnn test bench bench-sweep check-runtime fetch-public-data clean
+.PHONY: build build-release build-qnn test test-e2e bench bench-sweep check-runtime fetch-public-data clean
 
 build:
 	cargo build -p tachyon-rerank
@@ -11,6 +11,9 @@ build-qnn:
 
 test:
 	cargo test -p tachyon-rerank
+
+test-e2e:
+	cargo test -p tachyon-rerank --test e2e_server
 
 bench:
 	cargo run -p tachyon-rerank --bin tachyon-rerank-bench -- --backend cpu --n 1024 --d 128 --q-batch 4
