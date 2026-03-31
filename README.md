@@ -1,6 +1,6 @@
-# Tachyon ANN
+# Tachyon Rerank
 
-Tachyon ANN is a retrieval-first vector scoring microservice for edge hardware.
+Tachyon Rerank is a retrieval-first vector scoring microservice for edge hardware.
 
 It is designed for workloads that already have embeddings and need exact scoring over a shared candidate set:
 1. semantic search over a local corpus
@@ -30,8 +30,8 @@ rustup component add --toolchain 1.85.0 rustfmt clippy
 ```
 2. Build and run the service.
 ```bash
-cargo build -p tachyon-ann --bin tachyon-ann
-TACHANN_BACKEND=cpu ./target/debug/tachyon-ann
+cargo build -p tachyon-rerank --bin tachyon-rerank
+TACHANN_BACKEND=cpu ./target/debug/tachyon-rerank
 ```
 3. Try a request.
 ```bash
@@ -47,7 +47,7 @@ curl -s http://localhost:8080/score \
 **Quickstart: Tachyon Particle / QNN**
 1. Build the server and shim.
 ```bash
-cargo build -p tachyon-ann --bin tachyon-ann
+cargo build -p tachyon-rerank --bin tachyon-rerank
 QNN_SDK_ROOT=/path/to/qairt cargo build -p tachyon_qnnshim
 ```
 2. Export the verified runtime environment.
@@ -66,7 +66,7 @@ export TACHANN_QNN_STATIC_A=1
 ```
 4. Run the service.
 ```bash
-./target/debug/tachyon-ann
+./target/debug/tachyon-rerank
 ```
 5. Inspect the selected runtime.
 ```bash
@@ -122,7 +122,7 @@ curl -s http://localhost:8080/score_batch \
 ```
 
 **Repository Layout**
-1. `services/tachann`: service, runtime router, and bench binary
+1. `services/tachann`: service, runtime router, and benchmark binary
 2. `native/qnnshim`: direct QNN shim used by the service
 3. `examples`: retrieval-first mini demos and fixtures
 4. `benchmarks`: checked-in benchmark report, raw data, and charts

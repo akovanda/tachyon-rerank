@@ -6,7 +6,7 @@ use std::io::Write;
 use std::process::Command;
 use std::time::Instant;
 
-use tachyon_ann::backend::{self, Backend, BackendKind, DistMetric};
+use tachyon_rerank::backend::{self, Backend, BackendKind, DistMetric};
 
 #[derive(Debug, Clone, ValueEnum)]
 enum Metric {
@@ -35,7 +35,7 @@ enum WhichBackend {
 
 #[derive(Parser, Debug)]
 #[command(
-    name = "tachann-bench",
+    name = "tachyon-rerank-bench",
     about = "In-process ANN microbench for CPU/QNN/ORT"
 )]
 struct Args {
@@ -220,7 +220,7 @@ fn main() -> anyhow::Result<()> {
     let baked_qnn = std::env::var("TACHANN_ORT_QNN_BAKED_A").ok().as_deref() == Some("1");
     if baked_qnn {
         let baked_op = std::env::var("TACHANN_ORT_QNN_BAKED_OP").unwrap_or_else(|_| "gemm".into());
-        let tmpdir = std::env::temp_dir().join("tachann_onnx");
+        let tmpdir = std::env::temp_dir().join("tachyon_rerank_onnx");
         fs::create_dir_all(&tmpdir)?;
         let a_bin = tmpdir.join("a.bin");
         let mut f = File::create(&a_bin)?;

@@ -1,8 +1,8 @@
 [package]
-name="tachyon-ann"
+name="tachyon-rerank"
 version="0.1.0"
 edition="2021"
-description="Retrieval-first ANN microservice with QNN-first edge acceleration and CPU fallback."
+description="Retrieval-first reranking microservice with QNN-first edge acceleration and CPU fallback."
 license="MIT"
 
 [dev-dependencies]
@@ -10,7 +10,7 @@ criterion = "0.5"
 rand = "0.8"
 
 [[bin]]
-name = "tachann-bench"
+name = "tachyon-rerank-bench"
 path = "src/bin/bench.rs"
 
 [dependencies]

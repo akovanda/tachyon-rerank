@@ -1,6 +1,6 @@
 # Architecture
 
-Tachyon ANN is an exact vector scoring microservice designed for edge retrieval and reranking workloads.
+Tachyon Rerank is an exact vector scoring microservice designed for edge retrieval and reranking workloads.
 
 **What It Does**
 1. Accepts one query with `/score` or many queries with `/score_batch`.

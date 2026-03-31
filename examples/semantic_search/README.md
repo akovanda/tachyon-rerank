@@ -13,7 +13,7 @@ curl -s http://localhost:8080/score \
   -d @examples/semantic_search/request.score.json
 ```
 
-**Why It Fits Tachyon ANN**
+**Why It Fits Tachyon Rerank**
 1. The corpus embeddings are static or slow-moving.
 2. The same candidate matrix can be reused for many local queries.
 3. This is the exact retrieval pattern where QNN batching becomes interesting.

@@ -16,7 +16,7 @@ This folder contains the checked-in Tachyon Particle benchmark report and the sc
 **Recommended Device Flow**
 1. Build the bench binary.
 ```bash
-cargo build -p tachyon-ann --bin tachann-bench
+cargo build -p tachyon-rerank --bin tachyon-rerank-bench
 ```
 2. Validate the runtime.
 ```bash
@@ -24,7 +24,7 @@ cargo build -p tachyon-ann --bin tachann-bench
 ```
 3. Run a single comparison.
 ```bash
-./target/debug/tachann-bench --backend cpu --backend qnn --n 1024 --d 128 --q-batch 4
+./target/debug/tachyon-rerank-bench --backend cpu --backend qnn --n 1024 --d 128 --q-batch 4
 ```
 4. Regenerate the full report.
 ```bash

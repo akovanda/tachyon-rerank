@@ -1983,7 +1983,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tachyon-ann"
+name = "tachyon-rerank"
 version = "0.1.0"
 dependencies = [
  "actix-web",

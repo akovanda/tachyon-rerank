@@ -24,7 +24,7 @@ export TACHANN_QNN_BACKEND=htp
 export TACHANN_QNN_FP16=0
 export TACHANN_QNN_STATIC_A=1
 ./scripts/check_runtime.sh --qnn
-./target/debug/tachyon-ann
+./target/debug/tachyon-rerank
 ```
 
 **Runtime Notes**

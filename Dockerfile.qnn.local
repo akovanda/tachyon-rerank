@@ -41,13 +41,13 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/src/target \
     set -eux; \
     cargo build --release -p tachyon_qnnshim; \
-    cargo build --release -p tachyon-ann --bin tachyon-ann; \
+    cargo build --release -p tachyon-rerank --bin tachyon-rerank; \
     if [ -f services/tachann/src/bin/bench.rs ]; then \
-      cargo build --release -p tachyon-ann --bin tachann-bench; \
+      cargo build --release -p tachyon-rerank --bin tachyon-rerank-bench; \
     fi; \
     mkdir -p /out/bin /out/lib; \
-    cp -v target/release/tachyon-ann /out/bin/; \
-    [ -f target/release/tachann-bench ] && cp -v target/release/tachann-bench /out/bin/ || true; \
+    cp -v target/release/tachyon-rerank /out/bin/; \
+    [ -f target/release/tachyon-rerank-bench ] && cp -v target/release/tachyon-rerank-bench /out/bin/ || true; \
     cp -v target/release/libtachyon_qnnshim.so /out/lib/; \
     ln -sf libtachyon_qnnshim.so /out/lib/libtachann_qnnshim.so
 
@@ -94,4 +94,4 @@ ENV ORT_DYLIB_PATH=/opt/onnx/lib/libonnxruntime.so \
 
 EXPOSE 8080
 ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["/app/bin/tachyon-ann"]
+CMD ["/app/bin/tachyon-rerank"]

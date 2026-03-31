@@ -4,7 +4,7 @@ use criterion::{
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 
-use tachyon_ann::backend::{
+use tachyon_rerank::backend::{
     try_new_ort_backend, Backend, BackendKind, CpuBackend, DistMetric, QnnBackend, RerankResult,
 };
 
@@ -178,14 +178,14 @@ fn criterion_bench(c: &mut Criterion) {
         return;
     }
 
-    let mut group = c.benchmark_group("tachann_distance");
+    let mut group = c.benchmark_group("tachyon_rerank_distance");
     group.sampling_mode(SamplingMode::Auto);
 
     // optional CSV
     use std::io::Write as _;
     use std::path::Path;
 
-    let csv_path = getenv_string("TACHANN_BENCH_CSV", "target/tachann_bench.csv");
+    let csv_path = getenv_string("TACHANN_BENCH_CSV", "target/tachyon_rerank_bench.csv");
     if let Some(parent) = Path::new(&csv_path).parent() {
         std::fs::create_dir_all(parent).ok();
     }

@@ -1,10 +1,10 @@
 services:
-  tachann:
+  tachyon-rerank:
     build:
       context: .
       dockerfile: Dockerfile
-    image: tachann:cpu
-    command: ["/app/tachyon-ann"]
+    image: tachyon-rerank:cpu
+    command: ["/app/tachyon-rerank"]
     ports:
       - "8080:8080"
     restart: unless-stopped

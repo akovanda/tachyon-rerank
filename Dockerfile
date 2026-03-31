@@ -21,7 +21,7 @@ COPY services services
 
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/src/target \
-    cargo build --release -p tachyon-ann --bin tachyon-ann
+    cargo build --release -p tachyon-rerank --bin tachyon-rerank
 
 FROM debian:bookworm-slim AS runtime
 ENV DEBIAN_FRONTEND=noninteractive
@@ -37,7 +37,7 @@ RUN set -eux; \
   ; rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY --from=builder /src/target/release/tachyon-ann /app/tachyon-ann
+COPY --from=builder /src/target/release/tachyon-rerank /app/tachyon-rerank
 
 EXPOSE 8080
-ENTRYPOINT ["/app/tachyon-ann"]
+ENTRYPOINT ["/app/tachyon-rerank"]

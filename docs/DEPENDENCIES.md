@@ -1,10 +1,10 @@
 # External Dependencies
 
-Tachyon ANN is usable in three modes, and each mode has different runtime requirements.
+Tachyon Rerank is usable in three modes, and each mode has different runtime requirements.
 
 **CPU-only**
 1. No external inference runtime is required.
-2. `cargo build -p tachyon-ann` and `TACHANN_BACKEND=cpu` are enough.
+2. `cargo build -p tachyon-rerank` and `TACHANN_BACKEND=cpu` are enough.
 
 **QNN / HTP**
 1. You must provide a local QAIRT/QNN SDK copy.
@@ -38,8 +38,8 @@ export TACHANN_QNN_STATIC_A=1
 **How To Verify**
 1. CPU-only:
 ```bash
-cargo build -p tachyon-ann --bin tachyon-ann
-TACHANN_BACKEND=cpu ./target/debug/tachyon-ann
+cargo build -p tachyon-rerank --bin tachyon-rerank
+TACHANN_BACKEND=cpu ./target/debug/tachyon-rerank
 ```
 2. QNN / HTP:
 ```bash

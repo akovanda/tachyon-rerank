@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fetch a small public retrieval dataset for manual evaluation.
 
-This script intentionally downloads raw text data only. Tachyon ANN scores vectors;
+This script intentionally downloads raw text data only. Tachyon Rerank scores vectors;
 you still need an embedding model of your choice to turn the corpus and queries
 into embeddings before sending them to the service.
 """
@@ -54,7 +54,7 @@ def main() -> int:
     print()
     print("download complete")
     print("next step: embed the downloaded corpus and queries with your model of choice")
-    print("then feed the resulting vectors into Tachyon ANN via /score or /score_batch")
+    print("then feed the resulting vectors into Tachyon Rerank via /score or /score_batch")
     return 0
 
 

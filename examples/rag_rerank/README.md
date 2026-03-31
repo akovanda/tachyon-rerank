@@ -13,7 +13,7 @@ curl -s http://localhost:8080/score_batch \
   -d @examples/rag_rerank/request.score_batch.json
 ```
 
-**Why It Fits Tachyon ANN**
+**Why It Fits Tachyon Rerank**
 1. RAG pipelines usually retrieve a top-k set first, then rerank.
 2. That rerank stage is a small exact-scoring problem.
 3. Multiple user questions or agent subqueries can be batched together.

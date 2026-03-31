@@ -2,7 +2,7 @@
 name = "tachyon_qnnshim"
 version = "0.1.0"
 edition = "2021"
-description = "Thin C-ABI shim between tachann and QNN SDK (with CPU fallback)."
+description = "Thin C-ABI shim between Tachyon Rerank and the QNN SDK (with CPU fallback)."
 license = "MIT"
 
 [lib]

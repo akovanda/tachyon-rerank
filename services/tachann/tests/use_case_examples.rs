@@ -6,10 +6,10 @@ use std::cmp::Ordering;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Mutex;
-use tachyon_ann::api::{
+use tachyon_rerank::api::{
     configure, AppState, ScoreBatchRequest, ScoreBatchResponse, ScoreRequest, ScoreResponse,
 };
-use tachyon_ann::backend::{DistMetric, RuntimeRouter};
+use tachyon_rerank::backend::{DistMetric, RuntimeRouter};
 
 static ENV_LOCK: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
 

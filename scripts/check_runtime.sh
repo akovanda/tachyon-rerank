@@ -5,7 +5,7 @@ usage() {
   cat <<'USAGE'
 Usage: scripts/check_runtime.sh [--cpu|--qnn|--ort|--auto]
 
-Checks the current shell environment for the Tachyon ANN runtime.
+Checks the current shell environment for the Tachyon Rerank runtime.
 
 Modes:
   --auto  Infer what to check from the current environment (default)
@@ -91,7 +91,7 @@ Suggested QNN exports:
 HINT
 }
 
-echo "== Tachyon ANN runtime check =="
+echo "== Tachyon Rerank runtime check =="
 echo "mode: $mode"
 
 if [[ "$mode" == "cpu" || ($need_qnn -eq 0 && $need_ort -eq 0) ]]; then

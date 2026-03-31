@@ -13,7 +13,7 @@ curl -s http://localhost:8080/score_batch \
   -d @examples/code_search/request.score_batch.json
 ```
 
-**Why It Fits Tachyon ANN**
+**Why It Fits Tachyon Rerank**
 1. Code search often reranks a small top-k candidate set.
 2. Editor and search workflows naturally produce short bursts of queries.
 3. Batched reranking is exactly where the QNN path becomes more attractive.

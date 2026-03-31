@@ -21,6 +21,6 @@ jobs:
       - name: Python Script Syntax
         run: python3 -m py_compile scripts/bench_sweep.py scripts/fetch_public_demo_data.py
       - name: Build (CPU-only)
-        run: cargo build -p tachyon-ann
+        run: cargo build -p tachyon-rerank
       - name: Test
-        run: cargo test -p tachyon-ann
+        run: cargo test -p tachyon-rerank

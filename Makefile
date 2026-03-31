@@ -1,19 +1,19 @@
 .PHONY: build build-release build-qnn test bench bench-sweep check-runtime fetch-public-data clean
 
 build:
-	cargo build -p tachyon-ann
+	cargo build -p tachyon-rerank
 
 build-release:
-	cargo build -p tachyon-ann --release
+	cargo build -p tachyon-rerank --release
 
 build-qnn:
 	cargo build -p tachyon_qnnshim
 
 test:
-	cargo test -p tachyon-ann
+	cargo test -p tachyon-rerank
 
 bench:
-	cargo run -p tachyon-ann --bin tachann-bench -- --backend cpu --n 1024 --d 128 --q-batch 4
+	cargo run -p tachyon-rerank --bin tachyon-rerank-bench -- --backend cpu --n 1024 --d 128 --q-batch 4
 
 bench-sweep:
 	python3 scripts/bench_sweep.py --out benchmarks --backends cpu

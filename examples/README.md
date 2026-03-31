@@ -1,6 +1,6 @@
 # Examples
 
-These examples are retrieval-first mini demos for Tachyon ANN.
+These examples are retrieval-first mini demos for Tachyon Rerank.
 
 Each example includes:
 1. A tiny deterministic corpus with precomputed embeddings

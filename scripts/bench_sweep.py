@@ -249,8 +249,8 @@ def write_report(rows, out_path):
 def main():
     parser = argparse.ArgumentParser(description="Run benchmark sweeps and emit CSV + SVG charts.")
     parser.add_argument("--out", default="benchmarks", help="Output directory (default: benchmarks)")
-    parser.add_argument("--bench", default=None, help="Path to tachann-bench binary")
-    parser.add_argument("--release", action="store_true", help="Use target/release/tachann-bench")
+    parser.add_argument("--bench", default=None, help="Path to tachyon-rerank-bench binary")
+    parser.add_argument("--release", action="store_true", help="Use target/release/tachyon-rerank-bench")
     parser.add_argument("--case", action="append", help="Case like 1024x128 or 1024x128:5 (iters)")
     parser.add_argument("--batches", default="1,2,4,8,16,32", help="Comma-separated q_batch values")
     parser.add_argument("--warmup", type=int, default=1)
@@ -273,7 +273,7 @@ def main():
     if args.bench:
         bench = Path(args.bench)
     else:
-        bench = Path("target/release/tachann-bench" if args.release else "target/debug/tachann-bench")
+        bench = Path("target/release/tachyon-rerank-bench" if args.release else "target/debug/tachyon-rerank-bench")
 
     if not bench.exists():
         raise SystemExit(f"bench binary not found: {bench}")

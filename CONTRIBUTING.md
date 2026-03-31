@@ -15,7 +15,7 @@ Thanks for your interest in contributing.
 1. Install Rust `1.85.0`.
 2. CPU-only build:
 ```bash
-cargo build -p tachyon-ann
+cargo build -p tachyon-rerank
 ```
 3. QNN work requires `QNN_SDK_ROOT` plus the runtime pieces documented in `docs/DEPENDENCIES.md`.
 4. Validate the local runtime before running QNN-specific work:
@@ -26,7 +26,7 @@ cargo build -p tachyon-ann
 **Tests and Checks**
 1. Run the service tests, including the example-fixture tests.
 ```bash
-cargo test -p tachyon-ann
+cargo test -p tachyon-rerank
 ```
 2. Run format checks.
 ```bash
@@ -34,11 +34,11 @@ cargo fmt --all --check
 ```
 3. Run clippy.
 ```bash
-cargo clippy -p tachyon-ann --all-targets -- -D warnings
+cargo clippy -p tachyon-rerank --all-targets -- -D warnings
 ```
 4. Optional accelerator parity tests are opt-in:
 ```bash
-TACHANN_RUN_OPTIONAL_ACCEL_TESTS=1 cargo test -p tachyon-ann --test use_case_examples optional_
+TACHANN_RUN_OPTIONAL_ACCEL_TESTS=1 cargo test -p tachyon-rerank --test use_case_examples optional_
 ```
 
 **Examples and Docs**
