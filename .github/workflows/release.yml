@@ -38,6 +38,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          existing="$(git tag --points-at HEAD 'v*' | head -n1 || true)"
+          if [[ -n "$existing" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "head already tagged: $existing"
+            exit 0
+          fi
           latest="$(git tag --list 'v*' --sort=-version:refname | head -n1)"
           if [[ -z "$latest" ]]; then
             next="0.1.0"
@@ -49,12 +55,14 @@ jobs:
           echo "version=$next" >> "$GITHUB_OUTPUT"
 
       - name: Bump Manifest Versions
+        if: steps.version.outputs.skip != 'true'
         run: |
           set -euo pipefail
           python3 scripts/bump_version.py "${{ steps.version.outputs.version }}"
           cargo check -p tachyon-rerank
 
       - name: Commit and Tag Release
+        if: steps.version.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
