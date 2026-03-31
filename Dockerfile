@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.6
 
-FROM rust:1.85.0-slim-bookworm AS builder
+FROM rust:1.94.1-slim-bookworm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates pkg-config clang build-essential libssl-dev git \

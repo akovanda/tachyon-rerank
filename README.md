@@ -23,10 +23,10 @@ On Tachyon Particle, the service prefers the direct QNN HTP path. Everywhere els
 4. A generic mixed-precision inference framework; this service is an `f32` scoring API
 
 **Quickstart: CPU-only**
-1. Install Rust `1.85.0`.
+1. Install Rust `1.94.1`.
 ```bash
-rustup toolchain install 1.85.0
-rustup component add --toolchain 1.85.0 rustfmt clippy
+rustup toolchain install 1.94.1
+rustup component add --toolchain 1.94.1 rustfmt clippy
 ```
 2. Build and run the service.
 ```bash

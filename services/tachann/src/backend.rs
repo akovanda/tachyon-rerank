@@ -364,9 +364,10 @@ pub struct OrtBackend {
 impl OrtBackend {
     pub fn new() -> Result<Self> {
         let mut sb = SessionBuilder::new()
-            .context("ORT: failed to create SessionBuilder")?
+            .map_err(|e| anyhow!("ORT: failed to create SessionBuilder: {e}"))?;
+        sb = sb
             .with_optimization_level(GraphOptimizationLevel::Level3)
-            .context("ORT: failed to set optimization level")?;
+            .map_err(|e| anyhow!("ORT: failed to set optimization level: {e}"))?;
 
         let ort_ep = std::env::var("TACHANN_ORT_EP").unwrap_or_else(|_| "cpu".into());
         let mut kind = BackendKind::OrtCpu;
@@ -387,7 +388,7 @@ impl OrtBackend {
             let ep = ep.build();
             sb = sb
                 .with_execution_providers([ep])
-                .context("ORT: failed to register QNN execution provider")?;
+                .map_err(|e| anyhow!("ORT: failed to register QNN execution provider: {e}"))?;
             kind = BackendKind::OrtQnn;
         }
 

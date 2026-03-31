@@ -16,7 +16,7 @@ direct-qnn = []   # keep but unused for now
 
 [dependencies]
 once_cell = "1"
-libloading = { version = "0.8", optional = true }
+libloading = { version = "0.9", optional = true }
 
 [build-dependencies]
 cc = "1.0"

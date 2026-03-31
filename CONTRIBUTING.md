@@ -12,7 +12,7 @@ Thanks for your interest in contributing.
 2. If you plan a larger change, open an issue first.
 
 **Development Setup**
-1. Install Rust `1.85.0`.
+1. Install Rust `1.94.1`.
 2. CPU-only build:
 ```bash
 cargo build -p tachyon-rerank
