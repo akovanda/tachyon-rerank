@@ -1,6 +1,6 @@
 [package]
 name = "tachyon_qnnshim"
-version = "0.1.0"
+version="0.1.1"
 edition = "2021"
 description = "Thin C-ABI shim between Tachyon Rerank and the QNN SDK (with CPU fallback)."
 license = "MIT"
